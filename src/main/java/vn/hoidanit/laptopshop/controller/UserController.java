@@ -31,14 +31,20 @@ public class UserController {
 
     @RequestMapping("/admin/user")
     public String getUserPage(Model model) {
+        List<User> users = this.userService.getAllUsers();
+        model.addAttribute("users1", users);
+        return "/admin/user/table-user";
+    }
+
+    @RequestMapping("/admin/user/create") // GET
+    public String getCreateUserPage(Model model) {
         model.addAttribute("newUser", new User());
         return "/admin/user/create";
     }
 
     @RequestMapping(value = "/admin/user/create", method = RequestMethod.POST)
     public String getCreatePage(Model model, @ModelAttribute("newUser") User suthy) {
-        System.out.println("run here " + suthy);
         this.userService.handleSaveUser(suthy);
-        return "hello";
+        return "redirect:/admin/user";
     }
 }
