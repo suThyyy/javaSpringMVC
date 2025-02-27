@@ -27,7 +27,7 @@
                             <h3>Update a user</h3>
                             <hr />
                             <form:form method="post" action="/admin/user/update" modelAttribute="newUser">
-                                <div class="mb-3">
+                                <div class="mb-3" style="display: none;">
                                     <label class="form-label">ID:</label>
                                     <form:input type="text" class="form-control" path="id" />
                                 </div>
