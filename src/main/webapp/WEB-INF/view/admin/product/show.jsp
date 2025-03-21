@@ -24,7 +24,7 @@
                             <h1 class="mt-4">Manage Products</h1>
                             <ol class="breadcrumb mb-4">
                                 <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
-                                <li class="breadcrumb-item active">Products</li>
+                                <li class="breadcrumb-item active">Product</li>
                             </ol>
                             <div class="mt-5">
                                 <div class="row">
@@ -45,6 +45,27 @@
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
+                                            <tbody>
+                                                <c:forEach var="product" items="${products}">
+
+                                                    <tr>
+                                                        <th>${product.id}</th>
+                                                        <td>${product.name}</td>
+                                                        <td>${product.price}</td>
+                                                        <td>${product.factory}</td>
+                                                        <td>
+                                                            <a href="/admin/user/${user.id}"
+                                                                class="btn btn-success">View</a>
+                                                            <a href="/admin/user/update/${user.id}"
+                                                                class="btn btn-warning  mx-2">Update</a>
+                                                            <a href="/admin/user/delete/${user.id}"
+                                                                class="btn btn-danger">Delete</a>
+                                                        </td>
+                                                    </tr>
+
+                                                </c:forEach>
+
+                                            </tbody>
                                         </table>
                                     </div>
 
