@@ -115,7 +115,7 @@ public class UserController {
         return "/admin/user/delete";
     }
 
-    @PostMapping("/admin/user/delete") // GET
+    @PostMapping("/admin/user/delete")
     public String postDeleteUser(Model model, @ModelAttribute("newUser") User suthy) {
         System.out.println("test delete");
         this.userService.deleteAUser(suthy.getId());
