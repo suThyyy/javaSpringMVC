@@ -38,7 +38,7 @@ public class ProductController {
     @GetMapping("/admin/product/create") // GET
     public String getCreateProductPage(Model model) {
         model.addAttribute("newProduct", new Product());
-        return "/admin/product/create";
+        return "admin/product/create";
     }
 
     @PostMapping("/admin/product/create")
@@ -48,7 +48,7 @@ public class ProductController {
 
         // Validate
         if (newProductBindingResult.hasErrors()) {
-            return "/admin/product/create";
+            return "admin/product/create";
         }
         //
 
@@ -64,14 +64,14 @@ public class ProductController {
         Product pr = this.productService.fetchProductById(id).get();
         model.addAttribute("product", pr);
         model.addAttribute("id", id);
-        return "/admin/product/detail";
+        return "admin/product/detail";
     }
 
     @GetMapping("/admin/product/update/{id}")
     public String getUpdateProductPage(Model model, @PathVariable long id) {
         Product pr = this.productService.fetchProductById(id).get();
         model.addAttribute("newProduct", pr);
-        return "/admin/product/update";
+        return "admin/product/update";
     }
 
     @PostMapping("/admin/product/update")
@@ -109,7 +109,7 @@ public class ProductController {
         // Product product = new Product();
         // product.setId(id);
         model.addAttribute("newProduct", new Product());
-        return "/admin/product/delete";
+        return "admin/product/delete";
     }
 
     @PostMapping("/admin/product/delete") // GET
