@@ -8,10 +8,14 @@ import org.springframework.stereotype.Service;
 import jakarta.servlet.http.HttpSession;
 import vn.hoidanit.laptopshop.domain.Cart;
 import vn.hoidanit.laptopshop.domain.CartDetail;
+import vn.hoidanit.laptopshop.domain.Order;
+import vn.hoidanit.laptopshop.domain.OrderDetail;
 import vn.hoidanit.laptopshop.domain.Product;
 import vn.hoidanit.laptopshop.domain.User;
 import vn.hoidanit.laptopshop.repository.CartDetailRepository;
 import vn.hoidanit.laptopshop.repository.CartRepository;
+import vn.hoidanit.laptopshop.repository.OrderDetailRepository;
+import vn.hoidanit.laptopshop.repository.OrderRepository;
 import vn.hoidanit.laptopshop.repository.ProductRepository;
 
 @Service
@@ -21,13 +25,18 @@ public class ProductService {
     private final CartRepository cartRepository;
     private final CartDetailRepository cartDetailRepository;
     private final UserService userService;
+    private final OrderRepository orderRepository;
+    private final OrderDetailRepository orderDetailRepository;
 
     public ProductService(ProductRepository productRepository, CartRepository cartRepository,
-            CartDetailRepository cartDetailRepository, UserService userService) {
+            CartDetailRepository cartDetailRepository, UserService userService, OrderRepository orderRepository,
+            OrderDetailRepository orderDetailRepository) {
         this.productRepository = productRepository;
         this.cartDetailRepository = cartDetailRepository;
         this.cartRepository = cartRepository;
         this.userService = userService;
+        this.orderRepository = orderRepository;
+        this.orderDetailRepository = orderDetailRepository;
     }
 
     public Product createProduct(Product pr) {
@@ -128,5 +137,43 @@ public class ProductService {
                 this.cartDetailRepository.save(currentCartDetail);
             }
         }
+    }
+
+    public void handlePlaceOrder(User user, HttpSession session,
+            String receiverName, String receiverAddress, String receiverPhone) {
+        // Create order
+        Order order = new Order();
+        order.setUser(user);
+        order.setReceiverAddress(receiverAddress);
+        order.setReceiverName(receiverName);
+        order.setReceiverPhone(receiverPhone);
+        // luu xuong database, đồng thời gán lại order để lấy được id tự generate từ
+        // database
+        order = this.orderRepository.save(order);
+        // Create orderdetail
+
+        // B1 get cart by user
+        Cart cart = this.cartRepository.findByUser(user);
+        if (cart != null) {
+            List<CartDetail> cartDetails = cart.getCartDetails();
+            if (cartDetails != null) {
+                for (CartDetail cd : cartDetails) {
+                    OrderDetail orderDetail = new OrderDetail();
+                    orderDetail.setOrder(order);
+                    orderDetail.setProduct(cd.getProduct());
+                    orderDetail.setPrice(cd.getPrice());
+                    orderDetail.setQuantity(cd.getQuantity());
+
+                    this.orderDetailRepository.save(orderDetail);
+                }
+                // step 2 delete cartdetail and cart
+                for (CartDetail cd : cartDetails) {
+                    this.cartDetailRepository.deleteById(cd.getId());
+                }
+                this.cartRepository.deleteById(cart.getId());
+                session.setAttribute("sum", 0);
+            }
+        }
+
     }
 }
