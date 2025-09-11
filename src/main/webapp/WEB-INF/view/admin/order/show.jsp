@@ -1,5 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+        <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+            <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
         <!DOCTYPE html>
         <html lang="en">
 
@@ -26,7 +28,54 @@
                                 <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
                                 <li class="breadcrumb-item active">Orders</li>
                             </ol>
-                            <div>table order</div>
+                            <div class="mt-5">
+                                <div class="row">
+                                    <div class="col-12 mx-auto">
+                                        <div class="d-flex justify-content-between">
+                                            <h3>Table Orders</h3>
+                                        </div>
+
+                                        <hr />
+                                        <table class=" table table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Total Price</th>
+                                                    <th>User</th>
+                                                    <th>Status</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <c:forEach var="order" items="${orders}">
+
+                                                    <tr>
+                                                        <th>${order.id}</th>
+                                                         <td>
+                                                                <fmt:formatNumber type="number"
+                                                                    value="${order.totalPrice}" /> đ
+                                                            </td>
+                                                        <td>${order.user.fullName}</td>
+                                                        <td>${order.status}</td>
+                                                        <td>
+                                                            <a href="/admin/order/${order.id}"
+                                                                class="btn btn-success">View</a>
+                                                            <a href="/admin/order/update/${order.id}"
+                                                                class="btn btn-warning  mx-2">Update</a>
+                                                            <a href="/admin/order/delete/${order.id}"
+                                                                class="btn btn-danger">Delete</a>
+                                                        </td>
+                                                    </tr>
+
+                                                </c:forEach>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+
+                            </div>
                         </div>
                     </main>
                     <jsp:include page="../layout/footer.jsp" />
